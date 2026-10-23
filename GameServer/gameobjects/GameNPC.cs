@@ -1964,7 +1964,7 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			// do not allow saving in an instanced region
-			if (CurrentRegion.IsInstance)
+			if (CurrentRegion != null && CurrentRegion.IsInstance)
 			{
 				LoadedFromScript = true;
 				return;
@@ -3044,7 +3044,7 @@ namespace DOL.GS
 				var oldRegionID = Position.RegionID;
 				base.Position = value;
 				var newRegion = value.RegionID;
-				if (oldRegionID != newRegion && newRegion != 0)
+				if (oldRegionID != newRegion && newRegion != 0 && CurrentRegion != null)
 				{
 					if (m_followTimer != null) m_followTimer.Stop();
 					m_followTimer = new RegionTimer(this);

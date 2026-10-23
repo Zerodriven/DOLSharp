@@ -79,6 +79,7 @@ namespace DOL.GS.PacketHandler
         /// packet preprocessor that performs initial packet checks for this Packet Processor.
         /// </summary>
         protected PacketPreprocessing m_packetPreprocessor;
+        public PacketPreprocessing PacketPreprocessor => m_packetPreprocessor;
 
         /// <summary>
         /// Constructs a new PacketProcessor
@@ -179,6 +180,18 @@ namespace DOL.GS.PacketHandler
             foreach (PacketHandlerAttribute pha in attributes)
             {
                 m_packetPreprocessor.RegisterPacketDefinition(pha.Code, pha.PreprocessorID);
+            }
+
+            // Ensure CharacterSelectRequest is accessible by both 0xB8 and 0x10
+            if (m_packetHandlers[0xB8] != null && m_packetHandlers[0x10] == null)
+            {
+                m_packetHandlers[0x10] = m_packetHandlers[0xB8];
+                m_packetPreprocessor.RegisterPacketDefinition(0x10, (int)eClientStatus.LoggedIn);
+            }
+            else if (m_packetHandlers[0x10] != null && m_packetHandlers[0xB8] == null)
+            {
+                m_packetHandlers[0xB8] = m_packetHandlers[0x10];
+                m_packetPreprocessor.RegisterPacketDefinition(0xB8, (int)eClientStatus.LoggedIn);
             }
         }
 

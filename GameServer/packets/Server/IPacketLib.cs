@@ -181,7 +181,8 @@ namespace DOL.GS.PacketHandler
 		CharacterCreateRequest = 0xFF,		// 0x57 ^ 168
 		CharacterDeleteRequest = 0xC0, 		// 0x68 ^ 168
 		CharacterOverviewRequest = 0xFC, 	// 0x54 ^ 168
-		CharacterSelectRequest = 0x10, 		// 0xB8 ^ 168
+		CharacterSelectRequest = 0xB8, 		// 0x10 ^ 168 (184 sent by client)
+		CharacterSelectRequestOld = 0x10,
 		ClientCrash = 0x37, 				// 0x9F ^ 168
 		CryptKeyRequest = 0xF4, 			// 0x5C ^ 168
 		DestroyItemRequest = 0x80, 			// 0x28 ^ 168

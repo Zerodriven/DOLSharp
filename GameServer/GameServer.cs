@@ -1259,7 +1259,7 @@ namespace DOL.GS
 		{
 			lock (m_packetBufPoolLock)
 			{
-				if (m_packetBufPool.Count > 0)
+				if (m_packetBufPool != null && m_packetBufPool.Count > 0)
 					return m_packetBufPool.Dequeue();
 			}
 
@@ -1279,7 +1279,7 @@ namespace DOL.GS
 
 			lock (m_packetBufPoolLock)
 			{
-				if (m_packetBufPool.Count < MaxPacketPoolSize)
+				if (m_packetBufPool != null && m_packetBufPool.Count < MaxPacketPoolSize)
 					m_packetBufPool.Enqueue(buf);
 			}
 		}

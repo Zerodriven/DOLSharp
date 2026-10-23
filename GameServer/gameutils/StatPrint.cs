@@ -133,16 +133,19 @@ namespace DOL.GS.GameEvents
                     {
                         foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
                         {
+                            if (!mgr.Running || mgr.ActiveTimers == 0)
+                                continue;
+
                             TimerStats ts = (TimerStats)m_timerStatsByMgr[mgr];
                             if (ts == null) continue;
 
                             long curTick = mgr.CurrentTime;
                             if (ts.Time == curTick)
                             {
-                                log.FatalFormat("{0} stopped ticking; timer stacktrace:\n{1}\n", mgr.Name, mgr.GetFormattedStackTrace());
-                                log.FatalFormat("NPC update stacktrace:\n{0}\n", WorldMgr.GetFormattedWorldUpdateStackTrace());
-                                log.FatalFormat("Relocate() stacktrace:\n{0}\n", WorldMgr.GetFormattedRelocateRegionsStackTrace());
-                                log.FatalFormat("Packethandlers stacktraces:\n{0}\n", PacketProcessor.GetConnectionThreadpoolStacks());
+                                log.WarnFormat("{0} stopped ticking; timer stacktrace:\n{1}\n", mgr.Name, mgr.GetFormattedStackTrace());
+                                log.DebugFormat("NPC update stacktrace:\n{0}\n", WorldMgr.GetFormattedWorldUpdateStackTrace());
+                                log.DebugFormat("Relocate() stacktrace:\n{0}\n", WorldMgr.GetFormattedRelocateRegionsStackTrace());
+                                log.DebugFormat("Packethandlers stacktraces:\n{0}\n", PacketProcessor.GetConnectionThreadpoolStacks());
                             }
 
                             ts.Time = curTick;

@@ -185,6 +185,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (!charFound)
 				{
+					for (int i = 0; i < client.Account.Characters.Length; i++)
+					{
+						if (client.Account.Characters[i] != null && (client.Account.Characters[i].AccountSlot % 100 == charIndex % 10 || client.Account.Characters.Length == 1))
+						{
+							charFound = true;
+							client.LoadPlayer(i);
+							break;
+						}
+					}
+				}
+
+				if (!charFound)
+				{
 					client.Player = null;
 					client.ActiveCharIndex = -1;
 				}

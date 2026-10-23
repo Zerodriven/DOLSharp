@@ -920,7 +920,7 @@ namespace DOL.GS
 
 			// Dinberg: this will eventually need to be changed so that it moves them to the location they TP'ed in.
 			// DamienOphyr: Overwrite current position with Bind position in database, MoveTo() is inoperant
-			if (CurrentRegion.IsInstance)
+			if (CurrentRegion != null && CurrentRegion.IsInstance)
 			{
                 Position = BindPosition;
 			}
@@ -1034,7 +1034,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				if (CurrentRegion.IsInstance)
+			if (CurrentRegion != null && CurrentRegion.IsInstance)
 				{
                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitInInstance"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -1174,7 +1174,7 @@ namespace DOL.GS
 		/// <param name="forced">if true, can bind anywhere</param>
 		public virtual void Bind(bool forced)
 		{
-			if (CurrentRegion.IsInstance)
+			if (CurrentRegion != null && CurrentRegion.IsInstance)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -12305,6 +12305,11 @@ namespace DOL.GS
                 log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point."
                     , DBCharacter.Name, Coordinate.X, Coordinate.Y, Coordinate.Z, DBCharacter.Region);
                 Position = DBCharacter.GetBindPosition();
+                CurrentRegionID = (ushort)DBCharacter.BindRegion;
+            }
+            if (CurrentRegion == null)
+            {
+                CurrentRegionID = (ushort)(DBCharacter.Realm == 1 ? 1 : DBCharacter.Realm == 2 ? 100 : 200);
 			}
 
 			for (int i = 0; i < LastUniquePositions.Length; i++)

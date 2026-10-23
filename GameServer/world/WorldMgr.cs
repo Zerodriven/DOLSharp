@@ -934,6 +934,11 @@ namespace DOL.GS
 		/// <returns>true</returns>
 		public static bool StartRegionMgrs()
 		{
+			if (m_regionTimeManagers != null)
+			{
+				foreach (var mgr in m_regionTimeManagers)
+					mgr.Start();
+			}
 			m_regions.FreezeWhile(dict => {
 			                      	foreach (Region reg in dict.Values)
 			                      		reg.StartRegionMgr();
@@ -956,10 +961,15 @@ namespace DOL.GS
 
 			                      });			
 
+			if (m_regionTimeManagers != null)
+			{
+				foreach (var mgr in m_regionTimeManagers)
+					mgr.Stop();
+			}
+
 			if (log.IsDebugEnabled)
 				log.Debug("Region managers stopped.");
 		}
-
 		/// <summary>
 		/// Fetch a Region by it's ID
 		/// </summary>
