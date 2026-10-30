@@ -959,8 +959,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.CanSendTooltip(24, objectId))
 					{
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-                        client.Out.SendDelveInfo(new SpellDelve(spell, client).GetClientDelve().ClientMessage);
-                    }
+						if (spell != null)
+							client.Out.SendDelveInfo(new SpellDelve(spell, client).GetClientDelve().ClientMessage);
+					}
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))
@@ -976,7 +977,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
                         client.Out.SendDelveInfo(new SongDelve(objectId, client).GetClientDelve().ClientMessage);
                         var spell = SkillBase.GetSpellByTooltipID(objectId);
-                        client.Out.SendDelveInfo(new SpellDelve(spell, client).GetClientDelve().ClientMessage);
+						if (spell != null)
+							client.Out.SendDelveInfo(new SpellDelve(spell, client).GetClientDelve().ClientMessage);
                     }
 					break;
 				case 27://RANew

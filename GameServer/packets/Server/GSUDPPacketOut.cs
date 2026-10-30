@@ -59,7 +59,7 @@ namespace DOL.GS.PacketHandler
 
 		public override string ToString()
 		{
-			return base.ToString() + $": Size={Length - 5} ID=0x{m_packetCode:X2}";
+			return base.ToString() + $": Size={ToArray().Length - 5} ID=0x{m_packetCode:X2}";
 		}
 	}
 }

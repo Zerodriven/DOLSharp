@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <BaseIntermediateOutputPath>..\build\Tests\$(Configuration)\</BaseIntermediateOutputPath>
   </PropertyGroup>
@@ -46,6 +46,7 @@
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" />
     <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
+    <ProjectReference Include="..\GameServerScripts\GameServerScripts.csproj" Name="GameServerScripts" />
   </ItemGroup>
   <ItemGroup>
     <ScriptFiles Include="..\GameServerScripts\**\*.cs" />

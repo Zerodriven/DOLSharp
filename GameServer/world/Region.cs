@@ -1152,7 +1152,7 @@ namespace DOL.GS
             lock (ObjectsSyncLock)
             {
                 int index = obj.ObjectID - 1;
-                if (index < 0)
+                if (index < 0 || m_objects == null || index >= m_objects.Length)
                 {
                     return;
                 }

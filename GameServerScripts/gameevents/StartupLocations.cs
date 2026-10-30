@@ -102,7 +102,21 @@ namespace DOL.GS.GameEvents
 			
 			try
 			{
-				
+				if (DOL.GS.RiftConstants.ROUTE_ALL_NEW_CHARS_TO_COTSWOLD)
+				{
+					ch.Region = DOL.GS.RiftConstants.COTSWOLD_REGION;
+					ch.Xpos = DOL.GS.RiftConstants.COTSWOLD_BRIDGE_X;
+					ch.Ypos = DOL.GS.RiftConstants.COTSWOLD_BRIDGE_Y;
+					ch.Zpos = DOL.GS.RiftConstants.COTSWOLD_BRIDGE_Z;
+					ch.Direction = DOL.GS.RiftConstants.COTSWOLD_BRIDGE_HEADING;
+					BindCharacter(ch);
+
+					if (log.IsInfoEnabled)
+						log.InfoFormat("Rift system: Routed new character {0} (Realm: {1}) to Cotswold Bridge.", ch.Name, (eRealm)ch.Realm);
+
+					return;
+				}
+
 				var availableLocation = GetAllStartupLocationForCharacter(ch, chArgs.GameClient.Version);
 
 				StartupLocation dbStartupLocation = null;

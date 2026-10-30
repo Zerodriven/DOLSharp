@@ -154,6 +154,15 @@ namespace DOL.Tests
 
 			var canProcess16 = processor.PacketPreprocessor.CanProcessPacket(client, packetIn16);
 			Assert.That(canProcess16, Is.True, "Preprocessor must allow packet ID 16 for backward compatibility.");
+
+			// Ensure GSTCPPacketOut.ToHumanReadable() does not throw ObjectDisposedException after using/Dispose
+			GSTCPPacketOut disposedPak;
+			using (disposedPak = new GSTCPPacketOut(0x22))
+			{
+				disposedPak.WriteIntLowEndian(0);
+				disposedPak.WritePacketLength();
+			}
+			Assert.DoesNotThrow(() => disposedPak.ToHumanReadable());
 		}
 	}
 }

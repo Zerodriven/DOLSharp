@@ -21,6 +21,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ObjectInteractRequest, "Handles Client Interact Request", eClientStatus.PlayerInGame)]
 	public class ObjectInteractRequestHandler : IPacketHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			// packet.Skip(10);
@@ -28,6 +30,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			uint playerY = packet.ReadInt();
 			int sessionId = packet.ReadShort();
 			ushort targetOid = packet.ReadShort();
+
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Interact request from {0}: client coords {1},{2} session {3} (server session {4}) target OID {5} (server pos {6})",
+					client.Player?.Name ?? "null", playerX, playerY, sessionId, client.SessionID, targetOid, client.Player?.Position);
 
             //TODO: utilize these client-sent coordinates to possibly check for exploits which are spoofing position packets but not spoofing them everywhere
 			new InteractActionHandler(client.Player, targetOid).Start(1);
@@ -65,9 +71,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				GameObject obj = region.GetObject(m_targetOid);
 				if (obj == null || !player.IsWithinRadius(obj, WorldMgr.OBJ_UPDATE_DISTANCE))
+				{
+					if (log.IsDebugEnabled)
+						log.DebugFormat("Interact target OID {0} not usable by {1} (region {2}, resolved '{3}')",
+							m_targetOid, player.Name, player.CurrentRegionID, obj?.Name ?? "null");
+
 					player.Out.SendObjectDelete(m_targetOid);
+				}
 				else
+				{
+					if (log.IsDebugEnabled)
+						log.DebugFormat("Interact: {0} -> {1} '{2}' OID {3} distance {4}",
+							player.Name, obj.GetType().Name, obj.Name, obj.ObjectID, player.GetDistanceTo(obj, 1));
+
 					obj.Interact(player);
+				}
 			}
 		}
 	}

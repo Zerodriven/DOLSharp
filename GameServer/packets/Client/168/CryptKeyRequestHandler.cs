@@ -77,7 +77,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// this version is handled elsewhere before being sent here.
 				packet.Skip(3); // skip the numbers in the version
 				client.MinorRev = packet.ReadString(1); // get the minor revision letter // 1125d support
-				packet.Skip(2); // build
+				client.MajorBuild = (byte)packet.ReadByte();
+				client.MinorBuild = (byte)packet.ReadByte();
 
 
 				//Send the crypt key to the client

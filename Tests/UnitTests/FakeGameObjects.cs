@@ -1,7 +1,8 @@
-﻿using DOL.AI;
+using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 
 namespace DOL.UnitTests.Gameserver
@@ -28,8 +29,17 @@ namespace DOL.UnitTests.Gameserver
 
         public override CharacterClass CharacterClass { get { return fakeCharacterClass; } }
         public override byte Level { get; set; }
-        public override Region CurrentRegion { get { return fakeRegion; } set { } }
-        public override IPacketLib Out => new FakePacketLib();
+        public Region customRegion;
+        public override Region CurrentRegion { get { return customRegion ?? fakeRegion; } set { customRegion = value; } }
+        public Position LastMovedToPosition { get; set; }
+        public override bool MoveTo(Position position)
+        {
+            LastMovedToPosition = position;
+            Position = position;
+            return true;
+        }
+        private FakePacketLib m_fakePacketLib;
+        public override IPacketLib Out => m_fakePacketLib ?? (m_fakePacketLib = new FakePacketLib());
         public override GameClient Client => new GameClient(GameServer.Instance) { Account = new Account() };
         public override int GetBaseStat(eStat stat) => baseStat;
         public override int GetModifiedSpecLevel(string keyName) => modifiedSpecLevel;

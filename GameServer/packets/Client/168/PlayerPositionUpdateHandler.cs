@@ -773,6 +773,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.CurrentSpeed = 0;
 			else
 				client.Player.CurrentSpeed = (short)newPlayerSpeed;
+
+			// Stunned, mezzed or containment-held players cannot move. The client may not
+			// lock movement immediately (or may not recognise a scripted hold), so make the
+			// server position authoritative and resync the client on every movement update.
+			bool containmentHeld = client.Player.TempProperties.getProperty<bool>(RiftConstants.CONTAINMENT_HOLD_PROPERTY, false);
+			if (containmentHeld || client.Player.IsMezzed || client.Player.IsStunned)
+			{
+				client.Player.CurrentSpeed = 0;
+				client.Player.Out.SendPlayerJump(false);
+
+				if (log.IsInfoEnabled)
+				{
+					long lastHoldLog = client.Player.TempProperties.getProperty<long>("STUN_HOLD_LOG", 0);
+					if (Environment.TickCount - lastHoldLog > 1000)
+					{
+						log.InfoFormat("Stun hold: {0} stunned={1} mezzed={2} containmentHeld={3} serverPos={4} reported=({5},{6},{7}) maxSpeed={8}",
+							client.Player.Name, client.Player.IsStunned, client.Player.IsMezzed, containmentHeld, client.Player.Position,
+							(int)newPlayerX, (int)newPlayerY, (int)newPlayerZ, client.Player.MaxSpeed);
+						client.Player.TempProperties.setProperty("STUN_HOLD_LOG", (long)Environment.TickCount);
+					}
+				}
+
+				return;
+			}
 			/*
 			client.Player.IsStrafing = Flags1 == eFlags1.STRAFELEFT || Flags1 == eFlags1.STRAFERIGHT;
 			client.Player.IsDiving = Flags2 == eFlags2.DIVING ? true : false;
@@ -849,7 +873,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
             var newPosition = Position.Create(
-                regionID: newZone.ZoneRegion.ID,
+                // The client always reports the skinned zone, which belongs to the static
+                // region (for example Spindelhalla 125). Keep the region the player is
+                // actually in, otherwise moving inside an instance detaches the player
+                // from the instance region and every object lookup (target, interact,
+                // whisper, doors) resolves against the static region instead.
+                regionID: client.Player.CurrentRegionID,
                 x: (int)newPlayerX,
                 y: (int)newPlayerY,
                 z: (int)newPlayerZ,

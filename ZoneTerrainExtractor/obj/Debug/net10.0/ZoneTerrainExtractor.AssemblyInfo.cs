@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZoneTerrainExtractor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+776619f88d2d5ce52f09ab956194fd519a41f985")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3e02062c5be21ee870bcb709d8e6dc2747b38eea")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZoneTerrainExtractor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZoneTerrainExtractor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

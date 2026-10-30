@@ -1,6 +1,7 @@
-﻿using DOL.Database;
+using DOL.Database;
 using DOL.Database.Transaction;
 using DOL.GS;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using System;
 using System.Collections.Generic;
@@ -15,17 +16,48 @@ namespace DOL.UnitTests.Gameserver
 #pragma warning disable CS0672
         public override void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback) { }
 #pragma warning restore CS0672
-        public override void SendMessage(string msg, eChatType type, eChatLoc loc) { }
-        public override void SendUpdateIcons(System.Collections.IList changedEffects, ref int lastUpdateEffectsCount) { }
-        public override void SendConcentrationList() { }
-        public override void SendCharStatsUpdate() { }
-        public override void SendUpdateWeaponAndArmorStats() { }
+        public override void SendUpdatePlayer() { }
         public override void SendUpdateMaxSpeed() { }
-        public override void SendEncumberance() { }
-        public override void SendStatusUpdate() { }
-        public override void SendInventorySlotsUpdate(ICollection<int> slots) { }
-        public override void SendUpdateCraftingSkills() { }
-        public override void SendUpdateMoney() { }
+        public override void SendAttackMode(bool attackState) { }
+        public override void SendPlayerPositionAndObjectID() { }
+        public override void SendGroupWindowUpdate() { }
+        public override void SendGroupMembersUpdate(bool updateIcons, bool updatePlayerList) { }
+        public override void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living) { }
+        public string LastTimerTitle { get; set; }
+        public int LastTimerSeconds { get; set; }
+        public bool TimerClosed { get; set; }
+        public ushort LastSpellEffect { get; set; }
+        public ushort LastSoundEffect { get; set; }
+        public List<string> SentMessages { get; } = new List<string>();
+        public List<(string Message, eChatType Type, eChatLoc Loc)> SentMessageDetails { get; } = new List<(string, eChatType, eChatLoc)>();
+
+        public override void SendMessage(string msg, eChatType type, eChatLoc loc)
+        {
+            SentMessages.Add(msg);
+            SentMessageDetails.Add((msg, type, loc));
+        }
+
+        public override void SendTimerWindow(string title, int seconds)
+        {
+            LastTimerTitle = title;
+            LastTimerSeconds = seconds;
+            TimerClosed = false;
+        }
+
+        public override void SendCloseTimerWindow()
+        {
+            TimerClosed = true;
+        }
+
+        public override void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
+        {
+            LastSpellEffect = spellid;
+        }
+
+        public override void SendSoundEffect(ushort soundId, Position pos, ushort radius)
+        {
+            LastSoundEffect = soundId;
+        }
     }
 
     public class FakeRegion : Region

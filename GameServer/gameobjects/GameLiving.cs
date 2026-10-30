@@ -5990,7 +5990,14 @@ namespace DOL.GS
 			}
 			
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
-			
+
+			// Interactive static items (for example clickable dialogue links) are not
+			// GameLivings, so allow them to receive whispers through IWhisperTarget.
+			if (target is IWhisperTarget whisperTarget)
+			{
+				return whisperTarget.WhisperReceive(this, str);
+			}
+
 			if (target is GameLiving)
 			{
 				return ((GameLiving)target).WhisperReceive(this, str);

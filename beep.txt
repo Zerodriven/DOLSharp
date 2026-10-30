@@ -1,0 +1,2 @@
+[06:38:47,236] GSPacketIn: Size=7 Sequence=0x0000 Session=0 Parameter=0 ID=0xF4
+0000: 36 01 01 1E 62 8E 05                              6...b..
